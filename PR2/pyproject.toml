@@ -1,0 +1,10 @@
+[project]
+name = "fib_library_viktor"
+version = "0.1.0"
+description = "A simple library that contains infinite fibonacci sequence generator and a timed iterator"
+authors = [
+    {name = "Viktor", email = "zazuliaviktor4@gmail.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.8"
