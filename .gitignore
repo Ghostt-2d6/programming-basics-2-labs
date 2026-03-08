@@ -1,2 +1,3 @@
 .Qodo/
 *.egg-info/
+__pycache__/
