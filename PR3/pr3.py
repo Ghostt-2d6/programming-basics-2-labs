@@ -32,12 +32,19 @@ def func_memo(max_cache, policy, ttl):
             print(f"Cache is full, removing entry with this key (TBE policy): {oldest_entry}")
             del cache[oldest_entry]
             del usage_count[oldest_entry]
-            del creation_time[oldest_entry]            
+            del creation_time[oldest_entry]    
+
+        def custom_eject(cache, *args):
+            print(f"Cache is full, purging all entries (Custom policy)")
+            cache.clear()
+            usage_count.clear()
+            creation_time.clear()              
         
         policies = {
             'LRU': lru_eject,
             'LFU': lfu_eject,
             'TBE': tbe_eject,
+            'custom': custom_eject,
         }
         eject_func = policies.get(policy, policy)
 
@@ -63,7 +70,7 @@ def func_memo(max_cache, policy, ttl):
 
             result = func(*args)
 
-            if len(cache) >= max_cache and max_cache != None:
+            if len(cache) >= max_cache and max_cache is not None:
                 if callable(eject_func):
                         eject_func(cache, *args)
 
@@ -79,26 +86,25 @@ def func_memo(max_cache, policy, ttl):
     return func_decorator
 
 
-@func_memo(max_cache=2,policy='TBE', ttl=1)
+@func_memo(max_cache=3,policy='', ttl=10)
 def task(n):
     return n*10
 
-#un-comment code block below if you need to test LRU policy 
+#uncomment code block below if you need to test LRU policy 
 #recommended arguments for @func_memo: max_cache=2, policy='LRU' (mandatory), ttl=10 
-""" print("---Test for LRU---")
-print(f"test 1: {task(1)}")
+"""print(f"test 1: {task(1)}")
 print(f"test 2: {task(2)}")
 print(f"test 3: {task(3)}")
 print(f"test 4: {task(4)}") """
 
-#un-comment code block below if you need to test LFU policy 
+#uncomment code block below if you need to test LFU policy 
 #recommended arguments for @func_memo: max_cache=2, policy='LFU' (mandatory), ttl=10 
 """ print(f"test 1: {task(1)}")
 print(f"test 2: {task(1)}")
 print(f"test 3: {task(2)}")
 print(f"test 4: {task(3)}") """
 
-#un-comment code block below if you need to test Time Based Expiry policy 
+#uncomment code block below if you need to test Time Based Expiry policy 
 #recommended arguments for @func_memo: max_cache=2, policy='TBE' (not mandatory), ttl=1 (less than 2)
 #TBE policy is always active but if you want to test it exclusively with different max_cache/ttl args set policy='TBE'
 """ print(f"test 1: {task(1)}")
@@ -110,3 +116,11 @@ print(f"test 4: {task(1)}")
 time.sleep(2)
 print(f"test 5: {task(2)}")
 print(f"test 6: {task(1)}") """
+
+#uncomment code block below if you need to test custom eviction policy
+#by default custom policy is set to remove all cache entries if cache is full 
+#recommended arguments for @func_memo: max_cache=3, policy='custom' (mandatory), ttl=10
+""" print(f"test 1: {task(1)}")
+print(f"test 2: {task(2)}")
+print(f"test 3: {task(3)}")
+print(f"test 3: {task(4)}") """
