@@ -2,6 +2,9 @@
 name = "fib_library_viktor"
 version = "0.1.0"
 description = "A simple library that contains infinite fibonacci sequence generator and a timed iterator"
+dependencies = [
+
+]
 authors = [
     {name = "Viktor", email = "zazuliaviktor4@gmail.com"}
 ]
